@@ -4,7 +4,7 @@ import nest_asyncio
 from datetime import datetime, timedelta
 from telegram import Bot
 
-#nest_asyncio.apply()
+nest_asyncio.apply()
 
 BOT_TOKEN = '6593706311:AAGfep182h5A1hOifip4095pVEy4Rp7kZTs'
 CHAT_ID = "@roofpocazz"
@@ -15,25 +15,32 @@ def get_currencies():
     url = 'https://api.bybit.com/v2/public/tickers'
 
     response = requests.get(url)
+    
+    if response.status_code == 200:
 
-    data = response.json()
-    nums = list(range(len(data['result'])))
+        data = response.json()
+        nums = list(range(len(data['result'])))
 
-    symbols_list = []
-    prices_list = []
+        symbols_list = []
+        prices_list = []
 
-    for n in nums:
-        sb = data['result'][n]['symbol']
-        lp = data['result'][n]['last_price']
+        for n in nums:
+            sb = data['result'][n]['symbol']
+            lp = data['result'][n]['last_price']
 
-        symbols_list.append(sb)
-        prices_list.append(lp)
+            symbols_list.append(sb)
+            prices_list.append(lp)
 
-    sym_pr = dict(zip(symbols_list, prices_list))
+        sym_pr = dict(zip(symbols_list, prices_list))
 
-    sp = {key: sym_pr[key] for key in symbols}
+        sp = {key: sym_pr[key] for key in symbols}
 
-    return sp
+        return sp
+    
+    else:
+        print(response.status_code)
+        sp = {'B' : 1}
+        return sp
 
 def get_message():
 
